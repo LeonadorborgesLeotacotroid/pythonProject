@@ -1,25 +1,32 @@
-class Sesion:
-    def __init__(self, nickname, contraseña):
-        self.nickname = nickname
-        self.__contraseña = contraseña #es tenerlo privado
+class Escuela:
 
-    def get_contraseña(self):
-        return self.__contraseña
+     def __init__(self, nombre, escolaridad, localidad):
+            self.nombre = nombre
+            self.escolaridad = escolaridad
+            self.__localidad= localidad
 
-    def set_contraseña(self, nueva_contraseña):
-        if nueva_contraseña == 12345:
-            self.__contraseña = nueva_contraseña
-        else:
-            print("Error de contraseña.")
+     def mostrar(self):
+         print("ESCUELA: "+self.nombre)
+         print("ESCUELA: " + self.escolaridad)
+         print("ESCUELA: " + self.__localidad)#PRIVADO
 
-s1 = Sesion("Leotaco",1234)
-print(s1.nickname) #SE IMPRIMIRA EL NICKNAME
-print(s1.get_contraseña()) #SE MOSTRARA LA CONTRASEÑA PREESCRITA
+#GET=OBTENER Y SET= ASIGNAR
+     def get_localidad(self):
+         return self.__localidad
 
-# Intentamos modificar la contraseña pero en negativo, lo que no se debe hacer por encapsulamiento.
-s1.__contraseña = -1234
-print(s1.get_contraseña())   # Output: 1234, debera monstrar la contraseña correcta
+     def set_localidad(self,localidad):
+         self.__localidad = localidad
 
-# Utilizamos el método set_contraseña para modificar la contraseña.
-s1.set_contraseña(1245)   # Output: "La contraseña debe ser igual a 1234."
+#obtener localidad
+e1=Escuela("COBAY", "BACHILLERATO", "PROGRESO")
+localidad = e1.get_localidad()
+print(localidad)
+#cambiar ubicacion metodo set
+e1.set_localidad("Merida")
+e1.mostrar()
 
+#AQUI ESTA PARTE DEL ALGORITMO ES PARA DEMOSTRAR QUE LA VARIABLE LOCALIDAD ESTA
+#ENCAPSULADO POR ENDE DA ERROR
+'''e2=Escuela("MANIOBRAS MARITIMA", "PRIMARIA", "PROGRESO")
+print(e2.__localidad())
+e2.mostrar()'''
