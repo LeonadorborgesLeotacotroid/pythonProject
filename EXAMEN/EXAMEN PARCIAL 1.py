@@ -12,7 +12,7 @@ class Estudiante(Persona): #HERENCIA DE CLASES de persona
         pro = (((calf1+calf2+calf3) / 3)) #abstraccion
         return pro
 class Docente(Persona):
-    def salario_final(hora,horas1,):
+    def salario_final(hora,hora1,):
         salfinal= (hora*hora1)
         return salfinal
 
