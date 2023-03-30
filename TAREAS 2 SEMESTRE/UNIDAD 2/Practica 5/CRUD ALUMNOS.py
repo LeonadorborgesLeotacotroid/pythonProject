@@ -173,7 +173,7 @@ class Maestro:
 
     def llamar_maestro(self):
      ventana_profe.destroy()
-     call([sys.executable,'C:/pythonProject/TAREAS 2 SEMESTRE/UNIDAD 2/Practica 5/CRUD PRINCIPAL.py'])
+     call([sys.executable,'C:/pythonProject/TAREAS 2 SEMESTRE/UNIDAD 2/Practica 5/CRUD PRINCIPAL.py']) #importante cambiar la dirreccion segun donde se corresponda su computadora
 
     def salir_registro(self):
      ventana_profe.destroy()
