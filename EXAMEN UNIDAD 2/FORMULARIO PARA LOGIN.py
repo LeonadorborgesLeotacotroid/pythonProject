@@ -14,7 +14,7 @@ class Registro:
         self.ventana.title("REGISTRO")
         self.ventana.geometry("550x630")
         self.ventana.resizable(0,0)
-        self.ventana.config(bd=10, bg="azura")
+        self.ventana.config(bd=10, bg="azure")
         self.ventana.iconbitmap(r"C:/pythonProject/EXAMEN UNIDAD 2\icono.ico")
 
         titulo=Label(ventana, text="REGISTRO",fg="black", bg="azure" ,font=("Arial", 20,"bold"),pady=0).pack()
