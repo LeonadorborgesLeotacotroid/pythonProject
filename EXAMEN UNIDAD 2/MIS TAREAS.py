@@ -15,7 +15,7 @@ class Tareas:
         self.window.title("MIS TAREAS")
         self.window.geometry("900x670")
         self.window.resizable(0, 0)
-        self.window.config(bd=10, bg="azurw")
+        self.window.config(bd=10, bg="azure")
         self.window.iconbitmap(r"c:/pythonProject/EXAMEN UNIDAD 2/icono.ico")
 
         titulo = Label(ventana_tarea, text="ANOTA TUS TAREAS", fg="black", bg="azure", font=("Arial", 20, "bold"), pady=10).pack()
