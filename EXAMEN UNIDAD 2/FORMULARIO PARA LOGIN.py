@@ -15,12 +15,12 @@ class Registro:
         self.ventana.geometry("550x630")
         self.ventana.resizable(0,0)
         self.ventana.config(bd=10, bg="azure")
-        self.ventana.iconbitmap(r"C:\Users\miche\PycharmProjects\pycharm\EXAMEN UNIDAD 2\icono.ico")
+        self.ventana.iconbitmap(r"C:/pythonProject/EXAMEN UNIDAD 2\icono.ico")
 
         titulo=Label(ventana, text="REGISTRO",fg="black", bg="azure" ,font=("Arial", 20,"bold"),pady=0).pack()
 
        #INSERTAR IMAGEN
-        imagen_registro = Image.open("c:/Users/miche/PycharmProjects/pycharm/EXAMEN UNIDAD 2/FORMULARIOIMG.png")
+        imagen_registro = Image.open("c:/pythonProject/EXAMEN UNIDAD 2/FORMULARIOIMG.png")
         nueva_imagen = imagen_registro.resize((150, 150))
         render = ImageTk.PhotoImage(nueva_imagen)
         label_imagen = Label(ventana, image=render)
@@ -81,7 +81,7 @@ class Registro:
         if len(self.matricula.get()) !=0 and len(self.nombres.get()) !=0 and len(self.apellidos.get()) !=0 and len(self.combo_carrera.get()) !=0 and len(self.contrasena.get()) !=0 and len(self.repetir_contrasena.get()) !=0 :
             return True
         else:
-            messagebox.showerror("ERROR","COMPLETA LOS DATOS SOLICITADOOOOOOOS")
+            messagebox.showerror("ERROR","COMPLETA LOS DATOS SOLICITADOS")
 
 
     def validar_contrasena(self):

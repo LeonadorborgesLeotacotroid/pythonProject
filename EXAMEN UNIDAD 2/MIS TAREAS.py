@@ -118,11 +118,11 @@ class Tareas:
             dato = self.tree.item(self.tree.selection())['text']
             nombre = self.tree.item(self.tree.selection())['values'][0]
             query = "DELETE FROM MISTAREAS WHERE asignatura = ?"
-            respuesta = messagebox.askquestion("ADVERTENCIA", f"¿Seguro que desea eliminar esta tarea:?")
+            respuesta = messagebox.askquestion("ADVERTENCIA", f"¿SEGURO QUE QUIERES ELIMINAR ESTÁ TAREA: ?")
             if respuesta == 'yes':
                 self.Ejecutar_consulta(query, (dato,))
                 self.Obtener_tareas()
-                messagebox.showinfo('ÉXITO', 'TAREAS HECHA :3')
+                messagebox.showinfo('ÉXITO', 'TAREA HECHA :3')
             else:
                 messagebox.showerror('ERROR', f'Error al eliminar la tarea')
 
