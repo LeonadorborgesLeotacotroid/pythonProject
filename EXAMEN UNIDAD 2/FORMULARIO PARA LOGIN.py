@@ -126,7 +126,7 @@ class Registro:
 
     def Llamar_login(self):
         ventana.destroy()
-        call([sys.executable,'c:/pythonProject/EXAMEN UNIDAD 2/LOGI.py'])
+        call([sys.executable,'c:/pythonProject/EXAMEN UNIDAD 2/LOGIN.py'])
 
 
 if __name__ == '__main__':

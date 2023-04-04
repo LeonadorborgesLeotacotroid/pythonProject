@@ -28,7 +28,7 @@ class Login_Principal:
         render = ImageTk.PhotoImage(nueva_imagen)
         label_imagen = Label(ventanalogin, image=render)
         label_imagen.image = render
-        label_imagen.config(bg="azur")
+        label_imagen.config(bg="azure")
         label_imagen.pack(pady=10, padx=0, ipadx=0)
 
        #CREACION DEL MARCO PARA EL FORMULARIO
