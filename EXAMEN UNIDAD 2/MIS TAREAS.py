@@ -104,7 +104,7 @@ class Tareas:
                 query = 'INSERT INTO MISTAREAS VALUES(NULL, ?, ?, ?, ?)'
                 parameters = (self.combo_asignatura.get(), self.fecha.get(),self.puntaje.get(),self.descripcion.get())
                 self.Ejecutar_consulta(query, parameters)
-                messagebox.showinfo("REGISTRO EXITOSO", f'Tare registrado de la materia: {self.combo_asignatura.get()}')
+                messagebox.showinfo("REGISTRO EXITOSO", f'Tarea registrado de la materia: {self.combo_asignatura.get()}')
                 print('REGISTRADO')
             self.Limpiar_formulario()
             self.Obtener_tareas()

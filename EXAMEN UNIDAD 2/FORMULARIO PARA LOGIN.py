@@ -105,7 +105,7 @@ class Registro:
         if (dato == []):
             return True
         else:
-            messagebox.showerror("ERROR", "MATRICULA REGISTRADA ANTERIORMENTE")
+            messagebox.showerror("ERROR", "MATRÍCULA REGISTRADA ANTERIORMENTE")
 
     def Registrar_usuario(self):
         if self.validar_formulariofull() and self.validar_contrasena() and self.validar_contrasena():
@@ -126,7 +126,7 @@ class Registro:
 
     def Llamar_login(self):
         ventana.destroy()
-        call([sys.executable,'c:/Users/miche/PycharmProjects/pycharm/EXAMEN UNIDAD 2/LOGIN.py'])
+        call([sys.executable,'c:/pythonProject/EXAMEN UNIDAD 2/LOGIN.py'])
 
 
 if __name__ == '__main__':
