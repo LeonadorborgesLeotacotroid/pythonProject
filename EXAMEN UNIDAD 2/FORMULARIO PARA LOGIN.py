@@ -48,7 +48,7 @@ class Registro:
         self.apellidos.grid(row=2, column=1, padx=12, pady=8)
 
         label_carrera = Label(marco, text="CARRERA: ", bg="azure", font=("Arial", 12, "bold")).grid(row=3, column=0, sticky='s',padx=12, pady=8)
-        self.combo_carrera=ttk.Combobox(marco,values=["SISTEMAS","RENOVABLES","ELECTROMECANICA","LOGISTICA","ADMINISTRACIO"],width=22,state="readonly", font=("Arial", 12))
+        self.combo_carrera=ttk.Combobox(marco,values=["SISTEMAS","RENOVABLES","ELECTROMECÁNICA","LOGÍSTICA","ADMINISTRACIÓN"],width=22,state="readonly", font=("Arial", 12))
         self.combo_carrera.current(0)
 
         self.combo_carrera.grid(row=3, column=1, padx=12, pady=8)
@@ -81,7 +81,7 @@ class Registro:
         if len(self.matricula.get()) !=0 and len(self.nombres.get()) !=0 and len(self.apellidos.get()) !=0 and len(self.combo_carrera.get()) !=0 and len(self.contrasena.get()) !=0 and len(self.repetir_contrasena.get()) !=0 :
             return True
         else:
-            messagebox.showerror("ERROR","COMPLETE LOS DATOS SOLICITADOOOOOOOS")
+            messagebox.showerror("ERROR","COMPLETA LOS DATOS SOLICITADOOOOOOOS")
 
 
     def validar_contrasena(self):

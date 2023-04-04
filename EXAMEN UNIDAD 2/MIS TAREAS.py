@@ -26,7 +26,7 @@ class Tareas:
 
 
         label_asignatura= Label(marco, text="ASIGNATURA: ", bg="azure", font=("Ariual", 12, "bold")).grid(row=0, column=0,sticky='s', padx=5,pady=9)
-        self.combo_asignatura = ttk.Combobox(marco,values=["POO", "CALCULO", "ALGEBRA", "CONTABILIDAD","PROBABILIDAD","QUIMICA"],width=22,font=("Arial", 12, "bold"), state="readonly")
+        self.combo_asignatura = ttk.Combobox(marco,values=["SISTEMAS","RENOVABLES","ELECTROMECÁNICA","LOGÍSTICA","ADMINISTRACIÓN"],width=22,font=("Arial", 12, "bold"), state="readonly")
         self.combo_asignatura.current(0)
         self.combo_asignatura.focus()
         self.combo_asignatura.grid(row=0, column=1, padx=5, pady=0)
