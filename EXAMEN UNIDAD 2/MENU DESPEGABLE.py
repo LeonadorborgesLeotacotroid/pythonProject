@@ -18,7 +18,7 @@ class VentanaPrincipal:
         self.marco_principal.pack(fill=tk.BOTH, expand=True)
 
         # Crear el marco del menú lateral
-        self.marco_menu = tk.Frame(self.marco_principal, width=100, bg="azura")
+        self.marco_menu = tk.Frame(self.marco_principal, width=100, bg="azure")
         self.marco_menu.pack(side=tk.LEFT, fill=tk.Y)
 
         # Crear los botones del menú lateral
