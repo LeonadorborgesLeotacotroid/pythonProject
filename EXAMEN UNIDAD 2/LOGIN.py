@@ -69,7 +69,7 @@ class Login_Principal:
         if len(self.matricula.get()) !=0 and len(self.contrasena.get()) !=0:
             return True
         else:
-            messagebox.showerror("ERROR", "POR FAVOR INGRESE LOS DATOS CORRESPONDIENTES")
+            messagebox.showerror("ERROR", "POR FAVOR INGRESE LOS DATOS CORRESPONDIENTE")
 
     def login(self):
         if(self.validar_formulariofull()):
