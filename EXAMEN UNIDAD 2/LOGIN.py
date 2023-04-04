@@ -32,7 +32,7 @@ class Login_Principal:
         label_imagen.pack(pady=10, padx=0, ipadx=0)
 
        #CREACION DEL MARCO PARA EL FORMULARIO
-        marco = LabelFrame(ventanalogin, text="INICIA SECIÓN", bg="azure", font=("Comic Sans", 15, "bold"))
+        marco = LabelFrame(ventanalogin, text="INICIA SESIÓN", bg="azure", font=("Comic Sans", 15, "bold"))
         marco.config(bd=5, pady=10)
         marco.pack()
 
