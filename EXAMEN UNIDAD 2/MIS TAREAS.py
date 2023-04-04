@@ -82,7 +82,7 @@ class Tareas:
             if len(self.combo_asignatura.get()) != 0 and len(self.fecha.get()) != 0 and len(self.puntaje.get()) != 0 and  len(self.descripcion.get()) != 0:
                 return True
             else:
-                messagebox.showerror("ERROR", "Complete todos los campos del formulario")
+                messagebox.showerror("ERROR", "Completa todos los campos del formulario")
 
     def Limpiar_formulario(self):
             self.combo_asignatura.delete(0, END)
