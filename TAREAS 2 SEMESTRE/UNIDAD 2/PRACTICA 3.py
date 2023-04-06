@@ -43,7 +43,7 @@ class main:
             ms.showerror('Oops!', 'Usuario no encontrado.')
 
     def new_user(self):
-        # Establish Connection
+
         with sqlite3.connect('quit.db') as db:
             c = db.cursor()
 

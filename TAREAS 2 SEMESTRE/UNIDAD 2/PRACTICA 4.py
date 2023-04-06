@@ -52,14 +52,14 @@ class Product:
         return result
 
     def get_alumnos(self):
-        # cleaning Table
+
         records = self.tree.get_children()
         for element in records:
             self.tree.delete(element)
-        # getting data
+
         query = 'SELECT * FROM product ORDER BY name DESC'
         db_rows = self.run_query(query)
-        # filling data
+
         for row in db_rows:
             self.tree.insert('', 0, text = row[1], values = row[2])
 
