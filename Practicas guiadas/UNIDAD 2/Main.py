@@ -1,10 +1,11 @@
 import tkinter as tk
 from tkinter import messagebox
 import sqlite3
+from Alumno import Alumno
 
 
 def conectar_db():
-    conexion = sqlite3.connect("database.db")
+    conexion = sqlite3.connect("escuela.db")
     conexion.execute("""
                 create table if not exists alumnos(
                     id integer primary key AUTOINCREMENT,
@@ -19,10 +20,8 @@ def guardar_alumno():
     if name.get() == "" or age.get() == "":
         messagebox.showerror("Error en los datos", "Debe completar los datos del alumno")
         return
-    int_age = int(age.get())
-    print(int_age)
-    print(name.get())
-    conexion.execute("insert into alumnos(nombre, edad) values (?,?)", (name.get(), int_age))
+    nuevo = Alumno(name.get(), int(age.get()))
+    conexion.execute(f"insert into alumnos(nombre, edad) values ('{nuevo.getNombre()}',{nuevo.getEdad()})")
     conexion.commit()
     conexion.close()
     ventana_nuevo.destroy()
@@ -48,35 +47,7 @@ def actualiza_listado():
 
 
 
-def nuevo_alumno():
-    ventana_nuevo_alumno = tk.Toplevel(ventana)
-    ventana_nuevo_alumno.title("Agregar Alumno")
-    # Crear la etiqueta y el campo de entrada para el nombre
-    name_label = tk.Label(ventana_nuevo_alumno, text="Nombre:")
-    name_label.grid(row=0, column=0, padx=(10, 0))
-
-    name_entry = tk.Entry(ventana_nuevo_alumno)
-    name_entry.grid(row=0, column=1, padx=(0, 10), pady=(10, 0))
-
-    # Crear la etiqueta y el campo de entrada para la edad
-    age_label = tk.Label(ventana_nuevo_alumno, text="Edad:")
-    age_label.grid(row=1, column=0, padx=(10,0))
-
-    age_entry = tk.Entry(ventana_nuevo_alumno)
-    age_entry.grid(row=1, column=1, padx=(0, 10))
-
-    global name
-    name = name_entry
-    global age
-    age = age_entry
-    global ventana_nuevo
-    ventana_nuevo = ventana_nuevo_alumno
-
-    # Crear el botón para enviar los datos
-    submit_button = tk.Button(ventana_nuevo_alumno, text="Guardar", command=guardar_alumno)
-    submit_button.grid(row=2, column=0, columnspan=2, pady=10, padx=10)
-
-def eliminar_alumno():
+def nuevo_alumno(event=None):
     ventana_nuevo_alumno = tk.Toplevel(ventana)
     ventana_nuevo_alumno.title("Agregar Alumno")
     # Crear la etiqueta y el campo de entrada para el nombre
@@ -122,4 +93,5 @@ for registro in registros:
     registros_lb.insert(tk.END, registro)
 
 registros_lb.pack(pady=20, padx=20)
+ventana.bind_all("<Control-n>", nuevo_alumno)
 ventana.mainloop()

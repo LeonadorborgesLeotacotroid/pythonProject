@@ -1,5 +1,6 @@
 import tkinter as tk
-from tkinter import messagebox
+
+
 class MenuScreen(tk.Frame):
     def __init__(self, master):
         super().__init__(master)
@@ -27,12 +28,12 @@ class MenuScreen(tk.Frame):
         # Agregamos algunos widgets a la pantalla
         self.label = tk.Label(self, text="¡Hola, mundo!")
         self.label.pack(pady=20)
-        self.button = tk.Button(self, text="Presionar",command=self.press_button)
+        self.button = tk.Button(self, text="Presionar", command=self.press_button)
         self.button.pack()
 
         self.pack()
 
-    def open_file(self): #se muestra en la consola o terminal
+    def open_file(self):
         print("Abrir archivo")
 
     def save_file(self):
@@ -49,8 +50,6 @@ class MenuScreen(tk.Frame):
 
     def press_button(self):
         print("Botón presionado")
-        messagebox.showinfo(message="BOTON PRESIONADO", title="Título")
-
 
 
 root = tk.Tk()

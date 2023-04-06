@@ -17,7 +17,7 @@ conexion.execute("Insert into alumnos(nombre,edad) values(?,?)", ("Juan", 32))
 conexion.commit()
 
 # Recuperamos un elementos de la tabla alumnos y lo imprimimos
-alumno = conexion.execute("select * from alumnos where nombre = 'Juan'")
+alumno = conexion.execute("select * from alumnos where nombre = 'Ligia'")
 # Esto es para solamente traer el primero o bien para traer uno
 fila = alumno.fetchone()
 #imprimimos la fila (el alumno)
