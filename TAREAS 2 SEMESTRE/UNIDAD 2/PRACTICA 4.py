@@ -43,7 +43,7 @@ class Product:
         ttk.Button(text = 'EDITAR', command = self.edit_alumnos).grid(row = 5, column = 1, sticky = W + E)
         self.get_alumnos()
 
-    # Function to Execute Database Querys
+
     def run_query(self, query, parameters = ()):
         with sqlite3.connect(self.db_name) as conn:
             cursor = conn.cursor()
@@ -51,7 +51,6 @@ class Product:
             conn.commit()
         return result
 
-    # Get Products from Database
     def get_alumnos(self):
         # cleaning Table
         records = self.tree.get_children()
@@ -64,7 +63,7 @@ class Product:
         for row in db_rows:
             self.tree.insert('', 0, text = row[1], values = row[2])
 
-    # User Input Validation
+
     def validation(self):
         return len(self.name.get()) != 0 and len(self.matricula.get()) != 0
 
