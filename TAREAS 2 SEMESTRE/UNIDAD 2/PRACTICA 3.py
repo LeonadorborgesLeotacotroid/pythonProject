@@ -22,7 +22,7 @@ class main:
         self.password = StringVar()
         self.n_username = StringVar()
         self.n_password = StringVar()
-        # Create Widgets
+        # aqui llaman a los widgets
         self.widgets()
 
     # Login
@@ -88,8 +88,7 @@ class main:
         Label(self.logf, text='Contraseña: ', font=('', 20), pady=5, padx=5).grid(sticky=W)
         Entry(self.logf, textvariable=self.password, bd=5, font=('', 15), show='*').grid(row=1, column=1)
         Button(self.logf, text=' Login ', bd=3, font=('', 15), padx=5, pady=5, command=self.login).grid()
-        Button(self.logf, text=' Crear cuenta ', bd=3, font=('', 15), padx=5, pady=5, command=self.cr).grid(row=2,
-                                                                                                              column=1)
+        Button(self.logf, text=' Crear cuenta ', bd=3, font=('', 15), padx=5, pady=5, command=self.cr).grid(row=2,column=1)
         self.logf.pack()
 
         self.crf = Frame(self.master, padx=10, pady=10)
@@ -98,8 +97,7 @@ class main:
         Label(self.crf, text='Contraseña: ', font=('', 20), pady=5, padx=5).grid(sticky=W)
         Entry(self.crf, textvariable=self.n_password, bd=5, font=('', 15), show='*').grid(row=1, column=1)
         Button(self.crf, text='Crear cuenta', bd=3, font=('', 15), padx=5, pady=5, command=self.new_user).grid()
-        Button(self.crf, text='Registrate ahora', bd=3, font=('', 15), padx=5, pady=5, command=self.log).grid(row=2,
-                                                                                                         column=1)
+        Button(self.crf, text='Registrate ahora', bd=3, font=('', 15), padx=5, pady=5, command=self.log).grid(row=2,column=1)
 
 
 if __name__ == '__main__':

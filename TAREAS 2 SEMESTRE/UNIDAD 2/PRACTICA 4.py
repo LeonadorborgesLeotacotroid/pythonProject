@@ -4,35 +4,33 @@ from tkinter import *
 import sqlite3
 
 class Product:
-    # connection dir property
+    # conexion a la base de datos
     db_name = 'database.db'
 
     def __init__(self, window):
-        # Initializations
+
         self.wind = window
         self.wind.title('ALUMNOS  CRUD')
 
-        # Creating a Frame Container
+        # crear frame
         frame = LabelFrame(self.wind, text = 'Registrar alumno')
         frame.grid(row = 0, column = 0, columnspan = 3, pady = 20)
 
-        # Name Input
         Label(frame, text = 'Nombre: ').grid(row = 1, column = 0)
         self.name = Entry(frame)
         self.name.focus()
         self.name.grid(row = 1, column = 1)
 
-        # Price Input
         Label(frame, text = 'Matricula: ').grid(row = 2, column = 0)
-        self.price = Entry(frame)
-        self.price.grid(row = 2, column = 1)
+        self.matricula = Entry(frame)
+        self.matricula.grid(row = 2, column = 1)
 
-        # Button Add Product
-        ttk.Button(frame, text = 'Registrar', command = self.add_product).grid(row = 3, columnspan = 2, sticky = W + E)
+        #BTONO REGISTRAR
+        ttk.Button(frame, text = 'Registrar', command = self.add_alumnos).grid(row = 3, columnspan = 2, sticky = W + E)
 
-        # Output Messages
-        self.message = Label(text = '', fg = 'red')
-        self.message.grid(row = 3, column = 0, columnspan = 2, sticky = W + E)
+
+        self.mensaje = Label(text = '', fg = 'red')
+        self.mensaje.grid(row = 3, column = 0, columnspan = 2, sticky = W + E)
 
         # Table
         self.tree = ttk.Treeview(height = 10, columns = 2)
@@ -40,12 +38,10 @@ class Product:
         self.tree.heading('#0', text = 'Nombre', anchor = CENTER)
         self.tree.heading('#1', text = 'Matricula', anchor = CENTER)
 
-        # Buttons
-        ttk.Button(text = 'ELIMINAR', command = self.delete_product).grid(row = 5, column = 0, sticky = W + E)
-        ttk.Button(text = 'EDITAR', command = self.edit_product).grid(row = 5, column = 1, sticky = W + E)
 
-        # Filling the Rows
-        self.get_products()
+        ttk.Button(text = 'ELIMINAR', command = self.delete_alumnos).grid(row = 5, column = 0, sticky = W + E)
+        ttk.Button(text = 'EDITAR', command = self.edit_alumnos).grid(row = 5, column = 1, sticky = W + E)
+        self.get_alumnos()
 
     # Function to Execute Database Querys
     def run_query(self, query, parameters = ()):
@@ -56,7 +52,7 @@ class Product:
         return result
 
     # Get Products from Database
-    def get_products(self):
+    def get_alumnos(self):
         # cleaning Table
         records = self.tree.get_children()
         for element in records:
@@ -70,71 +66,71 @@ class Product:
 
     # User Input Validation
     def validation(self):
-        return len(self.name.get()) != 0 and len(self.price.get()) != 0
+        return len(self.name.get()) != 0 and len(self.matricula.get()) != 0
 
-    def add_product(self):
+    def add_alumnos(self):
         if self.validation():
             query = 'INSERT INTO product VALUES(NULL, ?, ?)'
-            parameters =  (self.name.get(), self.price.get())
+            parameters =  (self.name.get(), self.matricula.get())
             self.run_query(query, parameters)
-            self.message['text'] = 'Product {} added Successfully'.format(self.name.get())
+            self.mensaje['text'] = 'Alumnos agregado con exito .format(self.name.get())'
             self.name.delete(0, END)
-            self.price.delete(0, END)
+            self.matricula.delete(0, END)
         else:
-            self.message['text'] = 'Se requiere el nombre y matricula del alumno'
-        self.get_products()
+            self.mensaje['text'] = 'Se requiere el nombre y matricula del alumno'
+        self.get_alumnos()
 
-    def delete_product(self):
-        self.message['text'] = ''
+    def delete_alumnos(self):
+        self.mensaje['text'] = ''
         try:
            self.tree.item(self.tree.selection())['text'][0]
         except IndexError as e:
-            self.message['text'] = 'Por favor seleccione un registro'
+            self.mensaje['text'] = 'Por favor seleccione un registro'
             return
-        self.message['text'] = ''
+        self.mensaje['text'] = ''
         name = self.tree.item(self.tree.selection())['text']
         query = 'DELETE FROM product WHERE name = ?'
         self.run_query(query, (name, ))
-        self.message['text'] = 'Record {} deleted Successfully'.format(name)
-        self.get_products()
+        self.mensaje['text'] = 'Alumno eliminado con exito'.format(name)
+        self.get_alumnos()
 
-    def edit_product(self):
-        self.message['text'] = ''
+    def edit_alumnos(self):
+        self.mensaje['text'] = ''
         try:
             self.tree.item(self.tree.selection())['values'][0]
         except IndexError as e:
-            self.message['text'] = 'Por favor seleccione un registro'
+            self.mensaje['text'] = 'Por favor seleccione un registro'
             return
         name = self.tree.item(self.tree.selection())['text']
-        old_price = self.tree.item(self.tree.selection())['values'][0]
+        matricula = self.tree.item(self.tree.selection())['values'][0]
         self.edit_wind = Toplevel()
         self.edit_wind.title = 'Alumno Editar'
-        # Old Name
+        # NOMBRE VIEJO
         Label(self.edit_wind, text = 'Nombre Anterior:').grid(row = 0, column = 1)
         Entry(self.edit_wind, textvariable = StringVar(self.edit_wind, value = name), state = 'readonly').grid(row = 0, column = 2)
-        # New Name
+        # NOMBRE NUEVO
         Label(self.edit_wind, text = 'Nombre Nuevo').grid(row = 1, column = 1)
         new_name = Entry(self.edit_wind)
         new_name.grid(row = 1, column = 2)
 
-        # Old Price
+        #MATRICULA VIEJA
         Label(self.edit_wind, text = 'Matricula vieja:').grid(row = 2, column = 1)
-        Entry(self.edit_wind, textvariable = StringVar(self.edit_wind, value = old_price), state = 'readonly').grid(row = 2, column = 2)
-        # New Price
+        Entry(self.edit_wind, textvariable = StringVar(self.edit_wind, value = matricula), state = 'readonly').grid(row = 2, column = 2)
+        #MATTRICULA NUEVA
         Label(self.edit_wind, text = 'Matricula Nueva:').grid(row = 3, column = 1)
-        new_price= Entry(self.edit_wind)
-        new_price.grid(row = 3, column = 2)
+        new_matricula= Entry(self.edit_wind)
+        new_matricula.grid(row = 3, column = 2)
 
-        Button(self.edit_wind, text = 'Actualizar', command = lambda: self.edit_records(new_name.get(), name, new_price.get(), old_price)).grid(row = 4, column = 2, sticky = W)
+        Button(self.edit_wind, text = 'Actualizar', command = lambda: self.edit_records(new_name.get(), name, new_matricula.get(), matricula)).grid(row = 4, column = 2, sticky = W)
         self.edit_wind.mainloop()
 
-    def edit_records(self, new_name, name, new_price, old_price):
+    def edit_records(self, new_name, name, new_matricula, matricula):
         query = 'UPDATE product SET name = ?, price = ? WHERE name = ? AND price = ?'
-        parameters = (new_name, new_price,name, old_price)
+        parameters = (new_name, new_matricula,name, matricula)
         self.run_query(query, parameters)
         self.edit_wind.destroy()
-        self.message['text'] = 'Record {} updated successfylly'.format(name)
-        self.get_products()
+        self.mensaje['text'] = "DATOS ACTUALIZADOS CON EXITO".format(name)
+        self.get_alumnos()
 
 if __name__ == '__main__':
     window = Tk()
