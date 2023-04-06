@@ -2,7 +2,7 @@ from tkinter import ttk
 from tkinter import *
 
 import sqlite3
-
+#LEONARDO BORGES MINI CRUD
 class Product:
     # conexion a la base de datos
     db_name = 'database.db'

@@ -1,4 +1,4 @@
-#Leonardo Borges LOGIN CON BASE DE DATOS
+#Leonardo Borges PECH LOGIN CON BASE DE DATOS
 from tkinter import *
 from tkinter import messagebox as ms
 import sqlite3
