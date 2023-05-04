@@ -98,10 +98,10 @@ def update_data():
         try:
             connection = mysql.connector.connect(host="localhost", user="root", password="", database="crud")
             cursor = connection.cursor()
-            cursor.execute("SELECT * FROM datos WHERE id=%s", (new_id,))
+            cursor.execute("SELECT * FROM datos WHERE id=%s", (old_id,))
             result = cursor.fetchone()
-            if result:
-                messagebox.showerror("Error", "El ID ya existe en la tabla")        #lo que hace mediante esto es que si ya existe la id recheze la entrada
+            if old_id == new_id:
+                messagebox.showinfo("ACTUALIZADO")        #lo que hace mediante esto es que si ya existe la id recheze la entrada
             else:
                 cursor.execute("UPDATE datos SET id=%s, name=%s, age=%s, estado=%s, checkbox_value=%s WHERE id=%s",
                                (new_id, name, age, estado, checkbox_value, old_id))
