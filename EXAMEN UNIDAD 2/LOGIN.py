@@ -75,8 +75,7 @@ class Login_Principal:
         if(self.validar_formulariofull()):
             matricula=self.matricula.get()
             contrasena=self.contrasena.get()
-            datos=self.validar_login( matricula,contrasena)
-
+            datos=self.validar_login(matricula,contrasena)
             if(datos != []):
                 ventanalogin.destroy()
                 call([sys.executable, 'c:/pythonProject/EXAMEN UNIDAD 2/MENU DESPEGABLE.py'])
