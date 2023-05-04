@@ -77,38 +77,46 @@ def update_data():
         messagebox.showerror("Error", "Por favor seleccione un elemento para actualizar")
         return
 
-    selected_item = tree.selection()[0]                           #aqui mediante el arreglo 0 es decir la posicion se empieza a seleccionar
-    id = tree.item(selected_item)['values'][0]
+    selected_item = tree.selection()[0]
+    old_id = tree.item(selected_item)['values'][0]
 
+    new_id = id_entry.get()
     name = name_entry.get()
-    age = age_entry.get()                       # aqui se obtiene los datos obtenidos de los labels mas bien de las entradas
+    age = age_entry.get()                                      #aqui se obtiene los datos de las entradas
     estado = combo_asignatura.get()
     checkbox_value = var.get()
 
-    if not name.replace(' ', '').isalpha():
-        messagebox.showerror("Error", "El nombre solo puede contener letras")
+    if not new_id.isdigit():
+        messagebox.showerror("Error", "El ID solo puede contener números")
+    elif not name.replace(' ', '').isalpha():
+        messagebox.showerror("Error", "El nombre solo puede contener letras")                 #aqui se valida
     elif not age.isdigit():
-        messagebox.showerror("Error", "La edad solo puede contener números")            #aqui se validan los posibles errores
-    elif name == "" or age == "":
+        messagebox.showerror("Error", "La edad solo puede contener números")
+    elif new_id == "" or name == "" or age == "":
         messagebox.showerror("Error", "Por favor complete todos los campos")
     else:
         try:
             connection = mysql.connector.connect(host="localhost", user="root", password="", database="crud")
             cursor = connection.cursor()
-            cursor.execute("UPDATE datos SET name=%s, age=%s, estado=%s, checkbox_value=%s WHERE id=%s",
-                           (name, age, estado, checkbox_value, id))    #conecta a la base de datos y las actualiza
-            cursor.execute("commit")
+            cursor.execute("SELECT * FROM datos WHERE id=%s", (new_id,))
+            result = cursor.fetchone()
+            if result:
+                messagebox.showerror("Error", "El ID ya existe en la tabla")        #lo que hace mediante esto es que si ya existe la id recheze la entrada
+            else:
+                cursor.execute("UPDATE datos SET id=%s, name=%s, age=%s, estado=%s, checkbox_value=%s WHERE id=%s",
+                               (new_id, name, age, estado, checkbox_value, old_id))
+                cursor.execute("commit")
 
-            id_entry.delete(0, 'end')
-            name_entry.delete(0, 'end')
-            age_entry.delete(0, 'end')
-            combo_asignatura.set('')
-            var.set(0)
-            show_data()
-            messagebox.showinfo("Actualizar", "Datos actualizados correctamente")
-            connection.close()
+                id_entry.delete(0, 'end')
+                name_entry.delete(0, 'end')
+                age_entry.delete(0, 'end')
+                combo_asignatura.set('')
+                var.set(0)
+                show_data()
+                connection.close()
         except Exception as e:
             messagebox.showerror("Error", str(e))
+
 
 "---------------------Aqui permite que seleccionando un reglon de la tabla pueda actualizar---------------------------"
 def delete_data():
