@@ -101,7 +101,7 @@ def update_data():
             cursor.execute("SELECT * FROM datos WHERE id=%s", (old_id,))
             result = cursor.fetchone()
             if old_id == new_id:
-                messagebox.showinfo("ACTUALIZADO")        #lo que hace mediante esto es que si ya existe la id recheze la entrada
+                messagebox.showinfo("ERROR")        #lo que hace mediante esto es que si ya existe la id recheze la entrada
             else:
                 cursor.execute("UPDATE datos SET id=%s, name=%s, age=%s, estado=%s, checkbox_value=%s WHERE id=%s",
                                (new_id, name, age, estado, checkbox_value, old_id))
@@ -113,6 +113,7 @@ def update_data():
                 combo_asignatura.set('')
                 var.set(0)
                 show_data()
+                messagebox.showinfo("Actualizar","Datos actualizados correctamente")
                 connection.close()
         except Exception as e:
             messagebox.showerror("Error", str(e))
