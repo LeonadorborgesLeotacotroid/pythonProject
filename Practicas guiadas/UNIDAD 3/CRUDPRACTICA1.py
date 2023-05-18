@@ -3,7 +3,7 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
 import mysql.connector
-
+#CREAR TABLA CRUD EN MYSQL
 connection = mysql.connector.connect(host="localhost", user="root", password="", database="crud")
 cursor = connection.cursor()
 
@@ -11,7 +11,7 @@ cursor.execute("""
     CREATE TABLE IF NOT EXISTS datos (
         id INT PRIMARY KEY,
         name VARCHAR(255),
-        age INT,
+        age INT(3),
         estado VARCHAR(255),
         checkbox_value INT
     );
@@ -32,9 +32,10 @@ def insert_data():
     elif not name.replace(' ', '').isalpha():
         messagebox.showerror("Error", "El nombre solo puede contener letras")
     elif not age.isdigit():                                                                                    #aqui se realiza las validaciones
-        messagebox.showerror("Error", "La edad solo puede contener números")
+        messagebox.showerror("Error", "La edad solo puede contener números o 3 digitos")
     elif id == "" or name == "" or age == "" or estado == "":
         messagebox.showerror("Error", "Por favor complete todos los campos")
+
     else:
         try:
             connection = mysql.connector.connect(host="localhost", user="root", password="", database="crud")
@@ -94,6 +95,9 @@ def update_data():
         messagebox.showerror("Error", "La edad solo puede contener números")
     elif new_id == "" or name == "" or age == "":
         messagebox.showerror("Error", "Por favor complete todos los campos")
+    elif  old_id == new_id:
+        messagebox.showinfo("ERROR", "usted no realizo cambios")
+
     else:
         try:
             connection = mysql.connector.connect(host="localhost", user="root", password="", database="crud")
@@ -242,7 +246,7 @@ tree.heading('Nombre', text='Nombre', anchor=tk.W)
 tree.heading('Edad', text='Edad', anchor=tk.CENTER)
 tree.heading('Estado', text='Estado', anchor=tk.W)
 tree.heading('Grado', text='Grado', anchor=tk.CENTER)
-
+#AQUI
 scrollbar.config(command=tree.yview)
 
 tree.bind('<ButtonRelease-1>', select_item)
