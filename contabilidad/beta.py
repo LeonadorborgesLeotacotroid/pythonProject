@@ -4,38 +4,38 @@ import customtkinter
 from customtkinter import CTk, CTkLabel, CTkButton, CTkEntry, CTkComboBox
 from tkcalendar import DateEntry
 
-
 class VentanaPrincipal(CTk):
     global T
     T = 0
 
     def __init__(self):
-        super().__init__()
-        self.title("Ejemplo de ComboBox y Treeview")
+            super().__init__()
+            self.title("Ejemplo de ComboBox y Treeview")
 
-        # Crear ComboBox
-        opciones = ["INICIO", "COMPRA", "COSTO DE VENTAS", "DEVOLUCION S.C.", "DEVOLUCION S.V."]
-        self.combobox = CTkComboBox(self, values=opciones,state="readonly")
-        self.combobox.pack(pady=10)
+            # Crear ComboBox
+            opciones = ["INICIO", "COMPRA", "COSTO DE VENTAS", "DEVOLUCION S.C.", "DEVOLUCION S.V."]
+            self.combobox = CTkComboBox(self, values=opciones, state="readonly")
+            self.combobox.pack(pady=10)
 
-        # Crear Treeview
-        self.treeview = ttk.Treeview(self, columns=(0, 1, 2, 3, 4, 5, 6, 7, 8), show="headings")
-        self.treeview.pack()
-        self.treeview.heading(0, text="Fecha de operacion")
-        self.treeview.heading(1, text="Entradas")
-        self.treeview.heading(2, text="Salidas")
-        self.treeview.heading(3, text="Existencias")
-        self.treeview.heading(4, text="Costo unitario")
-        self.treeview.heading(5, text="Costo promedio")
-        self.treeview.heading(6, text="Debe")
-        self.treeview.heading(7, text="Haber")
-        self.treeview.heading(8, text="Saldo")
 
-        # Crear botón para abrir ventana
-        self.btn_abrir_ventana = CTkButton(self, text="Abrir Ventana", command=self.abrir_ventana)
-        self.btn_abrir_ventana.pack()
-        self.btn_select_theme = CTkButton(self, text="Cambiar color del tema", command=self.Cambiar_tema)
-        self.btn_select_theme.pack()
+            # Crear Treeview
+            self.treeview = ttk.Treeview(self, columns=(0, 1, 2, 3, 4, 5, 6, 7, 8), show="headings")
+            self.treeview.pack()
+            self.treeview.heading(0, text="Fecha de operacion")
+            self.treeview.heading(1, text="Entradas")
+            self.treeview.heading(2, text="Salidas")
+            self.treeview.heading(3, text="Existencias")
+            self.treeview.heading(4, text="Costo unitario")
+            self.treeview.heading(5, text="Costo promedio")
+            self.treeview.heading(6, text="Debe")
+            self.treeview.heading(7, text="Haber")
+            self.treeview.heading(8, text="Saldo")
+
+            # Crear botón para abrir ventana
+            self.btn_abrir_ventana = CTkButton(self, text="Abrir Ventana", command=self.abrir_ventana)
+            self.btn_abrir_ventana.pack()
+            self.btn_select_theme = CTkButton(self, text="Cambiar color del tema", command=self.Cambiar_tema)
+            self.btn_select_theme.pack()
 
     def abrir_ventana(self):
         seleccion = self.combobox.get()
@@ -50,6 +50,8 @@ class VentanaPrincipal(CTk):
             ventana_opcion4 = VentanaOpcion4(self)
         elif seleccion == "DEVOLUCION S.V.":
             ventana_opcion5 = VentanaOpcion5(self)
+        elif seleccion == "":
+            messagebox.showerror("ERROR","SELECCIONE UNA OPERACION")
 
     def Cambiar_tema(self):
         global T
@@ -116,9 +118,6 @@ class VentanaOpcion1(tk.Toplevel):
         # Lógica para obtener col5
         if col3 != 0:
             col5 = float(col8) / float(col3)
-
-
-
         # Agregar datos al Treeview en la ventana principal
         ventana_principal = self.master
         ventana_principal.treeview.insert("", "end", values=(formatted_date, col1, col2, col3, col4, col5, col6, col7, col8))
@@ -167,12 +166,11 @@ class VentanaOpcion2(tk.Toplevel):
         if not all([self.entry_col1.get(), self.entry_col4.get()]):
             messagebox.showerror("Error", "Ningún campo debe estar vacío.", parent=self)
             return
-
-        if not all([self.validate_entry(self.entry_col1.get()), self.validate_entry(self.entry_col4.get())]):
-            messagebox.showerror("Error",
-                                 "Los campos deben cumplir con las condiciones especificadas en el método validate_entry.",
-                                 parent=self)
+        selected_item = self.master.treeview.focus()
+        if not selected_item:
+            messagebox.showerror("Error", "Debe seleccionar una fila.", parent=self)
             return
+
         col1 = self.entry_col1.get()
         col4 = self.entry_col4.get()
         col2 = 0
@@ -184,8 +182,6 @@ class VentanaOpcion2(tk.Toplevel):
 
         # Get the selected date from the DateEntry widget
         selected_date = self.date_entry.get_date()
-
-
         formatted_date = selected_date.strftime("%Y-%m-%d")  # Customize the format as desired
         # Lógica para obtener col5
         if col3 != 0:
@@ -233,6 +229,10 @@ class VentanaOpcion3(tk.Toplevel):
     def guardar_datos(self):
         if not all([self.entry_col2.get()]):
             messagebox.showerror("Error", "Ningún campo debe estar vacío.", parent=self)
+            return
+        selected_item = self.master.treeview.focus()
+        if not selected_item:
+            messagebox.showerror("Error", "Debe seleccionar una fila.", parent=self)
             return
 
         col2 = self.entry_col2.get()
@@ -292,6 +292,10 @@ class VentanaOpcion4(tk.Toplevel):
         if not all([self.entry_col3.get()]):
             messagebox.showerror("Error", "Ningún campo debe estar vacío.", parent=self)
             return
+        selected_item = self.master.treeview.focus()
+        if not selected_item:
+            messagebox.showerror("Error", "Debe seleccionar una fila.", parent=self)
+            return
         col2 = int(self.entry_col3.get())
         col1 = 0
         col3 = float(self.master.treeview.item(self.master.treeview.focus())["values"][3]) - float(col2)
@@ -348,6 +352,10 @@ class VentanaOpcion5(tk.Toplevel):
     def guardar_datos(self):
         if not all([self.entry_col3.get()]):
             messagebox.showerror("Error", "Ningún campo debe estar vacío.", parent=self)
+            return
+        selected_item = self.master.treeview.focus()
+        if not selected_item:
+            messagebox.showerror("Error", "Debe seleccionar una fila.", parent=self)
             return
         col1 = int(self.entry_col3.get())
         col2 = 0
