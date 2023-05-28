@@ -17,7 +17,6 @@ class VentanaPrincipal(CTk):
             self.combobox = CTkComboBox(self, values=opciones, state="readonly")
             self.combobox.pack(pady=10)
 
-
             # Crear Treeview
             self.treeview = ttk.Treeview(self, columns=(0, 1, 2, 3, 4, 5, 6, 7, 8), show="headings")
             self.treeview.pack()
@@ -34,6 +33,9 @@ class VentanaPrincipal(CTk):
             # Crear botón para abrir ventana
             self.btn_abrir_ventana = CTkButton(self, text="Abrir Ventana", command=self.abrir_ventana)
             self.btn_abrir_ventana.pack()
+            self.btn_abrir_ventana = CTkButton(self, text="ELIMINAR", command=self.eliminar_renglon)
+            self.btn_abrir_ventana.pack()
+
             self.btn_select_theme = CTkButton(self, text="Cambiar color del tema", command=self.Cambiar_tema)
             self.btn_select_theme.pack()
 
@@ -53,6 +55,24 @@ class VentanaPrincipal(CTk):
         elif seleccion == "":
             messagebox.showerror("ERROR","SELECCIONE UNA OPERACION")
 
+    def eliminar_renglon(self):
+        # Verificar si se seleccionó una fila
+        seleccion = self.treeview.selection()
+        if not seleccion:
+            messagebox.showerror("Error", "Por favor, seleccione una fila.")
+            return
+
+        # Obtener todos los renglones del Treeview
+        renglones = self.treeview.get_children()
+
+        # Verificar si la fila seleccionada es la última fila
+        if seleccion[-1] != renglones[-1]:
+            messagebox.showerror("Error", "Por favor, seleccione la última fila.")
+            return
+
+        # Eliminar el último renglón del Treeview
+        self.treeview.delete(seleccion[-1])
+
     def Cambiar_tema(self):
         global T
         T = T + 1
@@ -60,7 +80,6 @@ class VentanaPrincipal(CTk):
             customtkinter.set_appearance_mode("light")
         else:
             customtkinter.set_appearance_mode("Dark")
-
 
 class VentanaOpcion1(tk.Toplevel):
     def __init__(self, master):
@@ -266,7 +285,6 @@ class VentanaOpcion3(tk.Toplevel):
         except ValueError:
             return False
 
-
 class VentanaOpcion4(tk.Toplevel):
     def __init__(self, master):
         super().__init__(master)
@@ -326,7 +344,6 @@ class VentanaOpcion4(tk.Toplevel):
                 return False
         except ValueError:
             return False
-
 
 class VentanaOpcion5(tk.Toplevel):
     def __init__(self, master):
