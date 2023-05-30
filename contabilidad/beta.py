@@ -1,8 +1,20 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
 import customtkinter
+import mysql.connector
 from customtkinter import CTk, CTkLabel, CTkButton, CTkEntry, CTkComboBox
 from tkcalendar import DateEntry
+
+bd = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="",
+    database="productos",
+    buffered=True
+)
+
+T = 0
+
 
 class VentanaPrincipal(CTk):
     def __init__(self):
@@ -29,6 +41,8 @@ class VentanaPrincipal(CTk):
         self.treeview.heading(8, text="Haber")
         self.treeview.heading(9, text="Saldo")
 
+        self.actualizar_treeview()
+
         # Crear botón para abrir ventana
         self.btn_abrir_ventana = CTkButton(self, text="Abrir Ventana", command=self.abrir_ventana)
         self.btn_abrir_ventana.pack()
@@ -37,6 +51,25 @@ class VentanaPrincipal(CTk):
 
         self.btn_select_theme = CTkButton(self, text="Cambiar color del tema", command=self.Cambiar_tema)
         self.btn_select_theme.pack()
+
+    def actualizar_treeview(self):
+        self.treeview.delete(*self.treeview.get_children())  # Limpiar el Treeview
+
+        seleccionar = "select * from productos where usuario = 'av' and contraseña = 'a' and producto = ''"
+        ta = bd.cursor()
+        ta.execute(seleccionar)
+        resultado = ta.fetchall()
+
+        for materias in resultado:
+            if not isinstance(materias, tuple):
+                continue
+            identificador = f"{materias[0]}_{materias[1]}"
+            self.treeview.insert(parent='', index='end', iid=identificador, values=(
+                materias[4], materias[5], materias[6], materias[7], materias[8], materias[9], materias[10], materias[11],
+                materias[12], materias[13]), tags="CustomCell")
+
+        ta.close()
+
 
     def abrir_ventana(self):
         if self.ventana_abierta:
@@ -47,45 +80,49 @@ class VentanaPrincipal(CTk):
 
         if seleccion == "INICIO":
             ventana_opcion1 = VentanaOpcion1(self)
-            ventana_opcion1.protocol("WM_DELETE_WINDOW", lambda: [ventana_opcion1.destroy(), setattr(self,'ventana_abierta',False)])
+            ventana_opcion1.protocol("WM_DELETE_WINDOW",
+                                     lambda: [ventana_opcion1.destroy(), setattr(self, 'ventana_abierta', False)])
             self.ventana_abierta = True
         elif seleccion == "COMPRA":
             ventana_opcion2 = VentanaOpcion2(self)
-            ventana_opcion2.protocol("WM_DELETE_WINDOW", lambda: [ventana_opcion2.destroy(), setattr(self,'ventana_abierta',False)])
+            ventana_opcion2.protocol("WM_DELETE_WINDOW",
+                                     lambda: [ventana_opcion2.destroy(), setattr(self, 'ventana_abierta', False)])
             self.ventana_abierta = True
         elif seleccion == "COSTO DE VENTAS":
             ventana_opcion3 = VentanaOpcion3(self)
-            ventana_opcion3.protocol("WM_DELETE_WINDOW", lambda: [ventana_opcion3.destroy(), setattr(self,'ventana_abierta',False)])
+            ventana_opcion3.protocol("WM_DELETE_WINDOW",
+                                     lambda: [ventana_opcion3.destroy(), setattr(self, 'ventana_abierta', False)])
             self.ventana_abierta = True
         elif seleccion == "DEVOLUCION S.C.":
             ventana_opcion4 = VentanaOpcion4(self)
-            ventana_opcion4.protocol("WM_DELETE_WINDOW", lambda: [ventana_opcion4.destroy(), setattr(self,'ventana_abierta',False)])
+            ventana_opcion4.protocol("WM_DELETE_WINDOW",
+                                     lambda: [ventana_opcion4.destroy(), setattr(self, 'ventana_abierta', False)])
             self.ventana_abierta = True
         elif seleccion == "DEVOLUCION S.V.":
             ventana_opcion5 = VentanaOpcion5(self)
-            ventana_opcion5.protocol("WM_DELETE_WINDOW", lambda: [ventana_opcion5.destroy(), setattr(self,'ventana_abierta',False)])
+            ventana_opcion5.protocol("WM_DELETE_WINDOW",
+                                     lambda: [ventana_opcion5.destroy(), setattr(self, 'ventana_abierta', False)])
             self.ventana_abierta = True
 
-
-
     def eliminar_renglon(self):
-        # Verificar si se seleccionó una fila
-        seleccion = self.treeview.selection()
-        if not seleccion:
-            messagebox.showerror("Error", "Por favor, seleccione una fila.")
+        selected_item = self.treeview.selection()
+        if not selected_item:
+            messagebox.showerror("Error", "No se ha seleccionado ningún renglón.")
             return
 
-        # Obtener todos los renglones del Treeview
-        renglones = self.treeview.get_children()
+        values = self.treeview.item(selected_item)["values"]
+        fecha_operacion = values[0]  # Obtener la fecha de operación (columna 0)
 
-        # Verificar si la fila seleccionada es la última fila
-        if seleccion[-1] != renglones[-1]:
-            messagebox.showerror("Error", "Por favor, seleccione la última fila.")
-            return
+        eliminar_query = "DELETE FROM productos WHERE fecha = %s"
+        eliminar_data = (fecha_operacion,)
+        cursor = bd.cursor()
+        cursor.execute(eliminar_query, eliminar_data)
+        bd.commit()
+        cursor.close()
 
-        # Eliminar el último renglón del Treeview
-        self.treeview.delete(seleccion[-1])
-
+        # Eliminar el ítem seleccionado del Treeview
+        self.treeview.delete(selected_item)
+        messagebox.showinfo("Eliminado", "El renglón ha sido eliminado de la base de datos.")
     def Cambiar_tema(self):
         global T
         T = T + 1
@@ -93,6 +130,7 @@ class VentanaPrincipal(CTk):
             customtkinter.set_appearance_mode("light")
         else:
             customtkinter.set_appearance_mode("Dark")
+
 
 class VentanaOpcion1(tk.Toplevel):
     def __init__(self, master):
@@ -115,13 +153,12 @@ class VentanaOpcion1(tk.Toplevel):
         # Crear campo de fecha
         self.label_fecha = CTkLabel(self, text="Fecha:", text_color="Black")
         self.label_fecha.grid(row=2, column=0, padx=5, pady=5)
-        self.date_entry = DateEntry(self,state="readonly")
+        self.date_entry = DateEntry(self, state="readonly")
         self.date_entry.grid(row=2, column=1, padx=5, pady=5)
 
         # Crear botón para guardar datos
         self.btn_guardar = CTkButton(self, text="Guardar", command=self.guardar_datos)
         self.btn_guardar.grid(row=3, column=0, columnspan=2, padx=5, pady=5)
-
 
     def guardar_datos(self):
         # Verificar que los campos no estén vacíos y que cumplan con las condiciones especificadas
@@ -147,10 +184,17 @@ class VentanaOpcion1(tk.Toplevel):
             col6 = float(col9) / float(col4)
         # Agregar datos al Treeview en la ventana principal
         ventana_principal = self.master
-        ventana_principal.treeview.insert("", "end", values=(formatted_date, col1, col2, col3, col4, col5, col6, col7, col8,col9))
+        ventana_principal.treeview.insert("", "end",
+                                          values=(formatted_date, col1, col2, col3, col4, col5, col6, col7, col8, col9))
+
+        ta = bd.cursor()
+        datos = "INSERT INTO productos (usuario, contraseña, producto, fecha, operacion, entradas, salidas, existencias, costounitario, costopromedio, debe, haber, saldo) VALUES ('av', 'a', '', %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+        llenar = (formatted_date, col1, col2, col3, col4, col5, col6, col7, col8, col9)
+        ta.execute(datos, llenar, )
+        bd.commit()
+        ta.close()
         self.master.ventana_abierta = False
         self.destroy()
-
 
     def validate_entry(self, new_text):
         if not new_text:
@@ -162,6 +206,7 @@ class VentanaOpcion1(tk.Toplevel):
                 return False
         except ValueError:
             return False
+
 
 class VentanaOpcion2(tk.Toplevel):
     def __init__(self, master):
@@ -198,7 +243,7 @@ class VentanaOpcion2(tk.Toplevel):
         if not selected_item:
             messagebox.showerror("Error", "Debe seleccionar una fila.", parent=self)
             return
-        col1= "COMPRA"
+        col1 = "COMPRA"
         col2 = self.entry_col2.get()
         col5 = self.entry_col5.get()
         col3 = 0
@@ -217,10 +262,18 @@ class VentanaOpcion2(tk.Toplevel):
 
         # Agregar datos al Treeview en la ventana principal
         ventana_principal = self.master
-        ventana_principal.treeview.insert("", "end",values=(formatted_date, col1, col2, col3, col4, col5, col6, col7, col8,col9))
+        ventana_principal.treeview.insert("", "end",
+                                          values=(formatted_date, col1, col2, col3, col4, col5, col6, col7, col8, col9))
         self.master.ventana_abierta = False
-        self.destroy()
 
+        ta = bd.cursor()
+        datos = "INSERT INTO productos (usuario, contraseña, producto, fecha, operacion, entradas, salidas, existencias, costounitario, costopromedio, debe, haber, saldo) VALUES ('av', 'a', '', %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+        llenar = (formatted_date, col1, col2, col3, col4, col5, col6, col7, col8, col9)
+        ta.execute(datos, llenar, )
+        bd.commit()
+        ta.close()
+
+        self.destroy()
 
     def validate_entry(self, new_text):
         if not new_text:
@@ -232,6 +285,7 @@ class VentanaOpcion2(tk.Toplevel):
                 return False
         except ValueError:
             return False
+
 
 class VentanaOpcion3(tk.Toplevel):
     def __init__(self, master):
@@ -263,7 +317,7 @@ class VentanaOpcion3(tk.Toplevel):
         if not selected_item:
             messagebox.showerror("Error", "Debe seleccionar una fila.", parent=self)
             return
-        col1= "COSTO DE VENTAS"
+        col1 = "COSTO DE VENTAS"
         col3 = self.entry_col3.get()
         col2 = 0
         col4 = float(self.master.treeview.item(self.master.treeview.focus())["values"][4]) - float(col3)
@@ -282,9 +336,19 @@ class VentanaOpcion3(tk.Toplevel):
 
         # Agregar datos al Treeview en la ventana principal
         ventana_principal = self.master
-        ventana_principal.treeview.insert("", "end",values=(formatted_date, col1, col2, col3, col4, col5, col6, col7, col8,col9))
+        ventana_principal.treeview.insert("", "end",
+                                          values=(formatted_date, col1, col2, col3, col4, col5, col6, col7, col8, col9))
         self.master.ventana_abierta = False
+
+        ta = bd.cursor()
+        datos = "INSERT INTO productos (usuario, contraseña, producto, fecha, operacion, entradas, salidas, existencias, costounitario, costopromedio, debe, haber, saldo) VALUES ('av', 'a', '', %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+        llenar = (formatted_date, col1, col2, col3, col4, col5, col6, col7, col8, col9)
+        ta.execute(datos, llenar, )
+        bd.commit()
+        ta.close()
+
         self.destroy()
+
     def validate_entry(self, new_text):
         if not new_text:
             return True
@@ -295,6 +359,7 @@ class VentanaOpcion3(tk.Toplevel):
                 return False
         except ValueError:
             return False
+
 
 class VentanaOpcion4(tk.Toplevel):
     def __init__(self, master):
@@ -325,7 +390,7 @@ class VentanaOpcion4(tk.Toplevel):
         if not selected_item:
             messagebox.showerror("Error", "Debe seleccionar una fila.", parent=self)
             return
-        col1= "DEVOLUCION S/C"
+        col1 = "DEVOLUCION S/C"
         col3 = int(self.entry_col3.get())
         col2 = 0
         col4 = float(self.master.treeview.item(self.master.treeview.focus())["values"][4]) - float(col3)
@@ -343,10 +408,20 @@ class VentanaOpcion4(tk.Toplevel):
 
         # Agregar datos al Treeview en la ventana principal
         ventana_principal = self.master
-        ventana_principal.treeview.insert("", "end",values=(formatted_date, col1, col2, col3, col4, col5, col6, col7, col8,col9))
+        ventana_principal.treeview.insert("", "end",
+                                          values=(formatted_date, col1, col2, col3, col4, col5, col6, col7, col8, col9))
 
         self.master.ventana_abierta = False
+
+        ta = bd.cursor()
+        datos = "INSERT INTO productos (usuario, contraseña, producto, fecha, operacion, entradas, salidas, existencias, costounitario, costopromedio, debe, haber, saldo) VALUES ('av', 'a', '', %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+        llenar = (formatted_date, col1, col2, col3, col4, col5, col6, col7, col8, col9)
+        ta.execute(datos, llenar, )
+        bd.commit()
+        ta.close()
+
         self.destroy()
+
     def validate_entry(self, new_text):
         if not new_text:
             return True
@@ -357,6 +432,7 @@ class VentanaOpcion4(tk.Toplevel):
                 return False
         except ValueError:
             return False
+
 
 class VentanaOpcion5(tk.Toplevel):
     def __init__(self, master):
@@ -387,7 +463,7 @@ class VentanaOpcion5(tk.Toplevel):
         if not selected_item:
             messagebox.showerror("Error", "Debe seleccionar una fila.", parent=self)
             return
-        col1="DEVOLUCION S/V"
+        col1 = "DEVOLUCION S/V"
         col2 = int(self.entry_col2.get())
         col3 = 0
         col4 = float(self.master.treeview.item(self.master.treeview.focus())["values"][4]) + float(col2)
@@ -405,9 +481,19 @@ class VentanaOpcion5(tk.Toplevel):
 
         # Agregar datos al Treeview en la ventana principal
         ventana_principal = self.master
-        ventana_principal.treeview.insert("", "end",values=(formatted_date, col1, col2, col3, col4, col5, col6, col7, col8,col9))
+        ventana_principal.treeview.insert("", "end",
+                                          values=(formatted_date, col1, col2, col3, col4, col5, col6, col7, col8, col9))
         self.master.ventana_abierta = False
+
+        ta = bd.cursor()
+        datos = "INSERT INTO productos (usuario, contraseña, producto, fecha, operacion, entradas, salidas, existencias, costounitario, costopromedio, debe, haber, saldo) VALUES ('av', 'a', '', %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+        llenar = (formatted_date, col1, col2, col3, col4, col5, col6, col7, col8, col9)
+        ta.execute(datos, llenar, )
+        bd.commit()
+        ta.close()
+
         self.destroy()
+
     def validate_entry(self, new_text):
         if not new_text:
             return True
