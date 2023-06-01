@@ -212,7 +212,7 @@ class TareasApp:
             self.cursor.execute("""
                 DELETE FROM tareas WHERE id=%s
             """, (id,))
-            if self.cursor.rowcount == 0:
+            if self.cursor.rowcount == 0: #SI EN LA COLUMNA NO EXISTE
                 messagebox.showerror("ERROR", "NO EXISTE UNA TAREA CON ESE ID")
             else:
                 self.conn.commit()
