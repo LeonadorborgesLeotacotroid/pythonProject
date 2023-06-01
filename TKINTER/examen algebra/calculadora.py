@@ -1,85 +1,59 @@
 import tkinter as tk
-from tkinter import messagebox
-import numpy as np
 
+def create_entries(event):
+    n = int(entry_n.get())
+    for entry in entries:
+        entry.destroy()
+    entries.clear()
+    for i in range(n):
+        entry_row = tk.Entry(root)
+        entry_row.pack()
+        entries.append(entry_row)
 
-def resolver():
-    try:
-        # Obtener el tamaño del sistema
-        n = int(entry_tamano.get())
+def gauss(event):
+    n = int(entry_n.get())
+    matrix = []
+    for i in range(n):
+        row = list(map(float, entries[i].get().split()))
+        matrix.append(row)
+    for i in range(n):
+        for j in range(i+1, n):
+            ratio = matrix[j][i]/matrix[i][i]
+            for k in range(n+1):
+                matrix[j][k] = matrix[j][k] - ratio * matrix[i][k]
+    x = [0 for i in range(n)]
+    x[n-1] = matrix[n-1][n]/matrix[n-1][n-1]
+    for i in range(n-2,-1,-1):
+        x[i] = matrix[i][n]
+        for j in range(i+1,n):
+            x[i] = x[i] - matrix[i][j]*x[j]
+        x[i] = x[i]/matrix[i][i]
+    result.set("Result: " + str(x))
 
-        # Crear matrices vacías para los coeficientes y los términos constantes
-        A = np.zeros((n, n))
-        b = np.zeros(n)
+root = tk.Tk()
+root.title("Gauss Method")
 
-        # Llenar las matrices con los valores ingresados por el usuario
-        for i in range(n):
-            for j in range(n):
-                A[i, j] = float(entries_coef[i][j].get())
-            b[i] = float(entries_const[i].get())
+label_n = tk.Label(root, text="Enter the size of the system:")
+entry_n = tk.Entry(root)
+label_n.pack()
+entry_n.pack()
 
-        # Resolver el sistema y mostrar el resultado
-        x = np.linalg.solve(A, b)
-        messagebox.showinfo("Resultado", "La solución es: " + str(x))
-    except:
-        messagebox.showerror("Error", "Por favor ingresa valores válidos.")
+button_create_entries = tk.Button(root, text="Create entries")
+button_create_entries.bind("<Button-1>", create_entries)
+button_create_entries.pack()
 
+label_matrix = tk.Label(root, text="Enter the coefficients separated by spaces:")
+label_matrix.pack()
 
-def actualizar_interfaz():
-    try:
-        # Obtener el tamaño del sistema
-        n = int(entry_tamano.get())
+entries = []
 
-        # Eliminar entradas antiguas si existen
-        if entries_coef:
-            for fila in entries_coef:
-                for entry in fila:
-                    entry.destroy()
-            entries_coef.clear()
+result = tk.StringVar()
+result.set("Result: ")
+label_result = tk.Label(root, textvariable=result)
+label_result.pack()
 
-        if entries_const:
-            for entry in entries_const:
-                entry.destroy()
-            entries_const.clear()
+button_solve = tk.Button(root, text="Solve")
+button_solve.bind("<Button-1>", gauss)
+button_solve.pack()
 
-        # Crear nuevas entradas para los coeficientes y los términos constantes
-        for i in range(n):
-            fila = []
-            for j in range(n):
-                entry = tk.Entry(ventana)
-                entry.grid(row=i + 2, column=j)
-                fila.append(entry)
-            entries_coef.append(fila)
-
-            entry = tk.Entry(ventana)
-            entry.grid(row=i + 2, column=n)
-            entries_const.append(entry)
-    except:
-        pass
-
-
-# Crear la ventana principal
-ventana = tk.Tk()
-ventana.title("Resolver sistema de ecuaciones lineales")
-
-# Crear entrada para el tamaño del sistema
-label_tamano = tk.Label(ventana, text="Tamaño del sistema:")
-label_tamano.grid(row=0, column=0)
-
-entry_tamano = tk.Entry(ventana)
-entry_tamano.grid(row=0, column=1)
-
-# Crear botón para actualizar la interfaz
-boton_actualizar = tk.Button(ventana, text="Actualizar", command=actualizar_interfaz)
-boton_actualizar.grid(row=1, column=0)
-
-# Crear listas vacías para las entradas de los coeficientes y los términos constantes
-entries_coef = []
-entries_const = []
-
-# Crear botón para resolver el sistema
-boton_resolver = tk.Button(ventana, text="Resolver", command=resolver)
-boton_resolver.grid(row=1, column=1)
-
-# Iniciar el bucle principal de la ventana
-ventana.mainloop()
+root.mainloop()

@@ -15,7 +15,6 @@ bd = mysql.connector.connect(
 
 T = 0
 
-
 class VentanaPrincipal(CTk):
     def __init__(self):
         super().__init__()
@@ -69,7 +68,6 @@ class VentanaPrincipal(CTk):
                 materias[12], materias[13]), tags="CustomCell")
 
         ta.close()
-
 
     def abrir_ventana(self):
         if self.ventana_abierta:
