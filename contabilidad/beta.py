@@ -219,7 +219,6 @@ class VentanaRegistro(CTk, Toplevel):
             usuario = self.entry_usuario.get()
             contraseña = self.entry_contraseña.get()
 
-            # Check if the user or password fields are empty
             if not usuario or not contraseña:
                 messagebox.showinfo(message="Usuario o contraseña no pueden estar vacíos")
                 return
@@ -690,7 +689,7 @@ def inicio():
     usuario = matricula_entry.get()
     contraseña = password_entry.get()
 
-    # Check if the user or password fields are empty
+
     if not usuario or not contraseña:
         messagebox.showinfo(message="Usuario o contraseña no pueden estar vacíos")
         return
