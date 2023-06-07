@@ -8,6 +8,7 @@ import mysql.connector
 import tkinter as tk
 import pandas as pd
 from openpyxl import Workbook
+from PIL import Image, ImageTk
 
 bd = mysql.connector.connect(
     host="localhost",
@@ -205,89 +206,94 @@ class VentanaPrincipal(CTk):
         else:
             return
 
-
 class VentanaRegistro(CTk, Toplevel):
     def __init__(self):
-        super().__init__()
+            super().__init__()
 
-        def volver():
-            self.withdraw()
-            lg.deiconify()
+            def volver():
+                self.withdraw()
+                lg.deiconify()
 
-        def registro_():
+            def registro_():
 
-            usuario = self.entry_usuario.get()
-            contraseña = self.entry_contraseña.get()
+                usuario = self.entry_usuario.get()
+                contraseña = self.entry_contraseña.get()
 
-            if not usuario or not contraseña:
-                messagebox.showinfo(message="Usuario o contraseña no pueden estar vacíos")
-                return
+                if not usuario or not contraseña:
+                    messagebox.showinfo(message="Usuario o contraseña no pueden estar vacíos")
+                    return
 
-            seleccionar = "SELECT * FROM productos WHERE usuario = %s"
-            ta = bd.cursor()
-            ta.execute(seleccionar, (usuario,))
-            resultado = ta.fetchone()
+                seleccionar = "SELECT * FROM productos WHERE usuario = %s"
+                ta = bd.cursor()
+                ta.execute(seleccionar, (usuario,))
+                resultado = ta.fetchone()
 
-            if resultado:
-                messagebox.showinfo(title="Duplicado", message="El usuario que intenta registrar ya existe")
-            else:
-                registrar = bd.cursor()
-                regist = "INSERT INTO productos (usuario, contraseña, producto) VALUES (%s, %s, %s)"
-                for x in range(1, 3):
-                    rar = (usuario, contraseña, "Producto " + str(x))
-                    registrar.execute(regist, rar)
-                bd.commit()
-                messagebox.showinfo(title="Registro exitoso", message="El usuario ha sido registrado correctamente")
-                volver()
-                ta.close()
+                if resultado:
+                    messagebox.showinfo(title="Duplicado", message="El usuario que intenta registrar ya existe")
+                else:
+                    registrar = bd.cursor()
+                    regist = "INSERT INTO productos (usuario, contraseña, producto) VALUES (%s, %s, %s)"
+                    for x in range(1, 3):
+                        rar = (usuario, contraseña, "Producto " + str(x))
+                        registrar.execute(regist, rar)
+                    bd.commit()
+                    messagebox.showinfo(title="Registro exitoso", message="El usuario ha sido registrado correctamente")
+                    volver()
+                    ta.close()
 
-        lg.withdraw()
+            lg.withdraw()
 
-        self.title("Registro")
-        self.geometry('700x500')
-        self.resizable(0, 0)
+            self.title("Registro")
+            self.config(bg="DeepSkyBlue4")
+            self.geometry('400x500')
+            self.resizable(0, 0)
 
-        self.frame = CTkFrame(self, fg_color="DeepSkyBlue4", border_color="DeepSkyBlue4", width=327, height=550)
-        self.frame.pack(side=tk.RIGHT, fill=tk.BOTH)
+            self.label = CTkLabel(self, text="REGISTRO", text_color="white", font=('Arial', 30, 'bold',),
+                                  bg_color="DeepSkyBlue4")
+            self.label.pack(padx=60, pady=10)
 
-        self.label = CTkLabel(self, text="REGISTRO", text_color="white", font=('Arial', 30, 'bold',))
-        self.label.pack(padx=60, pady=10)
+            self.marco = LabelFrame(self, text="INGRESE SUS DATOS", bg="DeepSkyBlue4",
+                                    font=("Comic Sans", 15, "bold"))
+            self.marco.config(padx=30, pady=10, bd=5)
+            self.marco.pack()
 
-        self.marco = LabelFrame(self.frame, text="INGRESE SUS DATOS", bg="DeepSkyBlue4",
-                                font=("Comic Sans", 15, "bold"))
-        self.marco.config(padx=30, pady=10, bd=5)
-        self.marco.pack()
+            # self.img_ = Image.open(r"C:\Users\Braul\python\l\HD-wallpaper-goldmoney-gold-shiny-coins.jpg")
+            # self.resized_img = self.img_.resize((500, 675))
+            # self.image = ImageTk.PhotoImage(self.resized_img)
 
-        self.label_usuario = CTkLabel(self.marco, text="USUARIO", text_color="BLACK")
-        self.label_usuario.grid(row=1, column=1, pady=4)
+            # self.label_img = tk.Label(self, image=self.image)
+            # self.label_img.image = self.image
+            # self.label_img.place(x=0, y=0)
 
-        vcmd = (self.register(self.validate_username), '%P')
-        self.entry_usuario = CTkEntry(self.marco, text_color="BLACK", validate='key', validatecommand=vcmd)
-        self.entry_usuario.grid(row=1, column=2, pady=25)
+            self.label_usuario = CTkLabel(self.marco, text="No. EMPLEADO", text_color="BLACK")
+            self.label_usuario.grid(row=1, column=1, pady=4)
 
-        self.label_usuario = CTkLabel(self.marco, text="CONTRASEÑA", text_color="BLACK")
-        self.label_usuario.grid(row=2, column=1, pady=4)
+            vcmd = (self.register(self.validate_username), '%P')
+            self.entry_usuario = CTkEntry(self.marco, text_color="BLACK", validate='key', validatecommand=vcmd)
+            self.entry_usuario.grid(row=1, column=2, pady=25)
 
-        vcmd = (self.register(self.validate_password), '%P')
-        self.entry_contraseña = CTkEntry(self.marco, text_color="BLACK", validate='key', validatecommand=vcmd)
-        self.entry_contraseña.grid(row=2, column=2, pady=7)
+            self.label_usuario = CTkLabel(self.marco, text="CONTRASEÑA", text_color="BLACK")
+            self.label_usuario.grid(row=2, column=1, pady=4)
 
-        self.but_on = CTkButton(self.marco, text="REGISTRAR", command=registro_)
-        self.but_on.grid(row=3, column=1, pady=55)
+            vcmd = (self.register(self.validate_password), '%P')
+            self.entry_contraseña = CTkEntry(self.marco, text_color="BLACK", validate='key', validatecommand=vcmd)
+            self.entry_contraseña.grid(row=2, column=2, pady=7)
 
-        self.button = CTkButton(self.marco, text="REGRESAR", command=volver)
-        self.button.grid(row=3, column=2, pady=8)
+            self.but_on = CTkButton(self.marco, text="REGISTRAR", command=registro_)
+            self.but_on.grid(row=3, column=1, pady=55)
 
-        self.mainloop()
+            self.button = CTkButton(self.marco, text="REGRESAR", command=volver)
+            self.button.grid(row=3, column=2, pady=8)
+
+            self.mainloop()
 
     def validate_username(self, new_text):
         if not new_text:
             return True
 
-        if new_text.isalpha() and len(new_text) <= 15:
+        if new_text.isdigit() and len(new_text) <= 15:
             return True
         return False
-
 
 
     def validate_password(self, new_text):
@@ -682,6 +688,7 @@ class VentanaOpcion5(tk.Toplevel):
                 return False
         except ValueError:
             return False
+    "-----------------------------------------------REGISTRO------------------------------------------------------------"
 def inicio():
     global usuario
     global contraseña
@@ -703,10 +710,6 @@ def inicio():
         messagebox.showinfo(message="Error usuario y/o contraseña")
         return
 
-    elif resultado[1] == usuario and resultado[2] != contraseña:
-        messagebox.showinfo(message="Contraseña incorrecta")
-        return
-
     elif resultado[1] == usuario and resultado[2] == contraseña:
         lg.withdraw()
         a = VentanaPrincipal()
@@ -722,7 +725,7 @@ def validate_employee_name(new_text):
 
     if not new_text:
         return True
-    if new_text.isalpha() and len(new_text) <= 15:
+    if new_text.isdigit() and len(new_text) <= 15:
         return True
     return False
 
@@ -743,19 +746,11 @@ lg.geometry('700x500')
 lg.config(bg="black")
 lg.title("INICIO")
 lg.resizable(False, False)
-# lg.iconbitmap(r"C:\Users\miche\PycharmProjects\PYCHARMich\Contabilidad/tecnologia-financiera.ico")
+lg.iconbitmap(r"C:\Users\miche\PycharmProjects\PYCHARMich\U4_CONT_POO/tecnologia-financiera.ico")
 
-# img = Image.open(r"C:\Users\miche\PycharmProjects\PYCHARMich\Contabilidad/FUTURE.png")
-# render = ImageTk.PhotoImage(img)
-# label_imagen = tk.Label(lg, image=render)
-# label_imagen.image = render
-# label_imagen.config(bg="black")
-# label_imagen.place(y=0, x=0)
-
-# Insertamos una imagen que no es porque le queda una marca de agua horrible
-# img = PhotoImage(file=r"C:\Users\miche\PycharmProjects\PYCHARMich\Contabilidad\FUTURE.png")
-# label_img = customtkinter.CTkLabel(master=lg, image=img,text="")
-# label_img.place(y=0, x=0)
+img = PhotoImage(file=r"C:\Users\miche\PycharmProjects\PYCHARMich\U4_CONT_POO\FUTURE SOFTWARE.png")
+label_img = customtkinter.CTkLabel(master=lg, image=img,text="")
+label_img.place(y=0, x=0)
 
 # Creamos un frame
 frame = customtkinter.CTkFrame(master=lg, fg_color="DeepSkyBlue4", border_color="DeepSkyBlue4", width=327, height=550)
@@ -766,19 +761,19 @@ label = customtkinter.CTkLabel(master=frame, text="BIENVENIDO", bg_color="DeepSk
                                font=('Arial', 30, 'bold',))
 label.pack(padx=60, pady=10)
 
-# imagen_registro = Image.open(r"C:\Users\miche\PycharmProjects\PYCHARMich\Contabilidad\LOGO.png")
-# nueva_imagen = imagen_registro.resize((200, 200))
-# render = ImageTk.PhotoImage(nueva_imagen)
-# label_imagen = Label(master=frame, image=render)
-# label_imagen.image = render
-# label_imagen.config(bg="DeepSkyBlue4")
-# label_imagen.pack(pady=10, padx=0, ipadx=0)
+imagen_registro = Image.open(r"C:\Users\miche\PycharmProjects\PYCHARMich\U4_CONT_POO\LOGO.png")
+nueva_imagen = imagen_registro.resize((200, 200))
+render = ImageTk.PhotoImage(nueva_imagen)
+label_imagen = Label(master=frame, image=render)
+label_imagen.image = render
+label_imagen.config(bg="DeepSkyBlue4")
+label_imagen.pack(pady=10, padx=0, ipadx=0)
 
 marco = LabelFrame(master=frame, text="INICIA SESIÓN", bg="DeepSkyBlue4", font=("Comic Sans", 15, "bold"))
 marco.config(padx=30, pady=10, bd=5)
 marco.pack()
 
-matricula_label = tk.Label(marco, text="NOMBRE DEL EMPLEADO:", bg="DeepSkyBlue4", font=("Arial", 12, "bold"))
+matricula_label = tk.Label(marco, text="No. EMPLEADO:", bg="DeepSkyBlue4", font=("Arial", 12, "bold"))
 matricula_label.grid(row=1, column=1, padx=5, pady=8)
 
 vcmd = (marco.register(validate_employee_name), '%P')
