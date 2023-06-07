@@ -12,7 +12,7 @@ class TareasApp:
     def __init__(self, master):
         self.master = master
         master.title("TAREAS")
-        self.master.config(bd=10, bg="azure")
+
         self.master.geometry("1080x750")
         self.master.iconbitmap(r"c:/pythonProject/EXAMEN U3/agen.ico")
 
